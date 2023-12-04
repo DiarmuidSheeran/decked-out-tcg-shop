@@ -34,3 +34,14 @@ body{
     border-color: #454955;
     
 }
+
+.product-img{
+	width: 100%;
+	height: 200px;
+    box-shadow: -1px -3px 5px -2px #454955;;
+}
+
+.col-lg-4, .col-lg-6, .col-lg-8, .col-lg-12{
+	margin-top: 10px;
+}
+
