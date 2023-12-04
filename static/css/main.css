@@ -1,0 +1,36 @@
+body{
+	background-color: #F3EFF5;
+}
+
+.bg-dark{
+	background-color: #0D0A0B!important;
+}
+
+#cart-icon{
+	width:25px;
+	display: inline-block;
+	margin-left: 15px;
+}
+
+#cart-total{
+	display: block;
+	text-align: center;
+	color:#fff;
+	background-color: red;
+	width: 20px;
+	height: 25px;
+	border-radius: 50%;
+	font-size: 14px;
+}
+
+
+.btn{
+	border-radius: 0;
+}
+
+.container {
+    border-style: 2px;
+    border-width: 2px;
+    border-color: #454955;
+    
+}
