@@ -5,7 +5,7 @@
 <div class="row">
     {% for product in products %}
 	<div class="col-lg-4">
-        <img class="product-img" src="{% static 'images/cart.png' %}">
+        <img class="product-img" src="{{product.image.url}}">
         <div class="box-element product-name">
             <h6><strong>{{product.name}}</strong></h6>
             <hr>
