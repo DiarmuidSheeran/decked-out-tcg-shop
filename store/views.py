@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import *
 from django.http import JsonResponse
 import json
+import datetime
 # Create your views here.
 
 def store(request):
@@ -90,4 +91,5 @@ def updateItem(request):
     return JsonResponse('Item was added', safe=False)
 
 def processOrder(request):
-	return JsonResponse('Payment submitted..', safe=False)
+    transaction_id = datetime.datetime.now().timestamp()
+    return JsonResponse('Payment submitted..', safe=False)
