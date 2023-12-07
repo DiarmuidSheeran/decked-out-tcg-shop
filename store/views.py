@@ -102,18 +102,19 @@ def processOrder(request):
 
         if total == order.get_cart_total:
             order.complete = True
-        order.save()
+            order.save()
 
-        if order.shipping == True:
-	        ShippingAddress.objects.create(
-	        customer=customer,
-	        order=order,
-	        address=data['shipping']['address'],
-	        city=data['shipping']['city'],
-	        state=data['shipping']['state'],
-	        zipcode=data['shipping']['zipcode'],
-	        )
+        if 'shipping' in data and data['shipping']:
+            shipping_info = data['shipping']
+            ShippingAddress.objects.create(
+                customer=customer,
+                order=order,
+                address=shipping_info['address'],
+                city=shipping_info['city'],
+                state=shipping_info['state'],
+                zipcode=shipping_info['zipcode']
+            )
     else:
-	    print('User is not logged in')
+        print('User is not logged in')
 
     return JsonResponse('Payment submitted..', safe=False)
