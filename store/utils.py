@@ -2,6 +2,8 @@ import json
 from .models import *
 
 def cookieCart(request):
+
+	#Create empty cart for now for non-logged in user
 	try:
 		cart = json.loads(request.COOKIES['cart'])
 	except:
@@ -39,15 +41,15 @@ def cookieCart(request):
 	return {'cartItems':cartItems ,'order':order, 'items':items}
 
 def cartData(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
-    
-    return {'cartItems':cartItems ,'order':order, 'items':items}
+	if request.user.is_authenticated:
+		customer = request.user.customer
+		order, created = Order.objects.get_or_create(customer=customer, complete=False)
+		items = order.orderitem_set.all()
+		cartItems = order.get_cart_items
+	else:
+		cookieData = cookieCart(request)
+		cartItems = cookieData['cartItems']
+		order = cookieData['order']
+		items = cookieData['items']
+
+	return {'cartItems':cartItems ,'order':order, 'items':items}

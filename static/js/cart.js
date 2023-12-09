@@ -5,15 +5,13 @@ for (i = 0; i < updateBtns.length; i++) {
 		var productId = this.dataset.product
 		var action = this.dataset.action
 		console.log('productId:', productId, 'Action:', action)
+		console.log('USER:', user)
 
-        console.log('USER:', user)
-        if (user == 'AnonymousUser'){
-	        console.log('User is not authenticated')
-			
-        }else{
-	        updateUserOrder(productId, action)
-        }
-
+		if (user == 'AnonymousUser'){
+			addCookieItem(productId, action)
+		}else{
+			updateUserOrder(productId, action)
+		}
 	})
 }
 
@@ -60,6 +58,24 @@ function addCookieItem(productId, action){
 	}
 	console.log('CART:', cart)
 	document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+	updateCartTotal(cart);
 	
 	location.reload()
+}
+
+function updateCartTotal(cart) {
+    var cartTotalElement = document.getElementById('cart-total');
+    var cartItemsCount = calculateCartItemsCount(cart);
+    cartTotalElement.innerText = cartItemsCount;
+}
+
+function calculateCartItemsCount(cart) {
+    var count = 0;
+    for (var productId in cart) {
+        if (cart.hasOwnProperty(productId)) {
+            count += cart[productId]['quantity'];
+        }
+    }
+    return count;
 }
