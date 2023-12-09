@@ -63,30 +63,58 @@ def updateItem(request):
 
 
 def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
-    data = json.loads(request.body)
+	transaction_id = datetime.datetime.now().timestamp()
+	data = json.loads(request.body)
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        total = float(data['form']['total'])
-        order.transaction_id = transaction_id
+	if request.user.is_authenticated:
+		customer = request.user.customer
+		order, created = Order.objects.get_or_create(customer=customer, complete=False)
+	else:
+		print('User is not logged in')
 
-        if total == order.get_cart_total:
-            order.complete = True
-            order.save()
+		print('COOKIES:', request.COOKIES)
+		name = data['form']['name']
+		email = data['form']['email']
 
-        if 'shipping' in data and data['shipping']:
-            shipping_info = data['shipping']
-            ShippingAddress.objects.create(
-                customer=customer,
-                order=order,
-                address=shipping_info['address'],
-                city=shipping_info['city'],
-                state=shipping_info['state'],
-                zipcode=shipping_info['zipcode']
-            )
-    else:
-        print('User is not logged in')
+		cookieData = cookieCart(request)
+		items = cookieData['items']
 
-    return JsonResponse('Payment submitted..', safe=False)
+		customer, created = Customer.objects.get_or_create(
+				email=email,
+				)
+		customer.name = name
+		customer.save()
+
+		order = Order.objects.create(
+			customer=customer,
+			complete=False,
+			)
+
+		for item in items:
+			product = Product.objects.get(id=item['id'])
+			orderItem = OrderItem.objects.create(
+				product=product,
+				order=order,
+				quantity=item['quantity'],
+			)
+	total = float(data['form']['total'])
+	order.transaction_id = transaction_id
+
+	if total == order.get_cart_total:
+		order.complete = True
+	order.save()
+
+	if 'shipping' in data and data['shipping']:
+		shipping_info = data['shipping']
+		ShippingAddress.objects.create(
+		customer=customer,
+		order=order,
+		address=shipping_info['address'],
+		city=shipping_info['city'],
+		state=shipping_info['state'],
+		zipcode=shipping_info['zipcode']
+	)
+	else:
+		print('User is not logged in')
+
+	return JsonResponse('Payment submitted..', safe=False)
